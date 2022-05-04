@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/patient")
@@ -25,13 +26,13 @@ public class PatientController {
 
     @GetMapping(value = "/{id}")
     public Patient findById(@PathVariable Long id) {
-        Patient patient = patientService.findById(id);
+        Optional<Patient> patientOptional = patientService.findById(id);
 
-        if (patient == null) {
+        if (!patientOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, messageService.get("patient.not-found"));
         }
 
-        return patient;
+        return patientOptional.get();
     }
 
     @PostMapping
@@ -41,23 +42,26 @@ public class PatientController {
 
     @PutMapping(value = "/{id}")
     public Patient update(@PathVariable Long id, @RequestBody Patient patient) {
-        Patient patientUpdated = patientService.update(id, patient);
+        Optional<Patient> patientOptional = patientService.findById(id);
 
-        if (patientUpdated == null) {
+        if (!patientOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, messageService.get("patient.not-found"));
         }
 
-        return patientUpdated;
+        patient.setId(id);
+        return patientService.save(patient);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        boolean deleted = patientService.deleteById(id);
+        Optional<Patient> patientOptional = patientService.findById(id);
 
-        if (!deleted) {
+        if (!patientOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, messageService.get("patient.not-found"));
         }
+
+        patientService.deleteById(id);
     }
 
     @GetMapping(value = "/get-patient-list")

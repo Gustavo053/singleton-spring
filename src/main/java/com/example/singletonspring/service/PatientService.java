@@ -1,7 +1,6 @@
 package com.example.singletonspring.service;
 
 import com.example.singletonspring.model.Patient;
-import com.example.singletonspring.model.Patient;
 import com.example.singletonspring.model.WaitingList;
 import com.example.singletonspring.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +18,17 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Patient findById(Long id) {
+    public Optional<Patient> findById(Long id) {
         Optional<Patient> patientOptional = patientRepository.findById(id);
-
-        if (!patientOptional.isPresent()) {
-            return null;
-        }
-
-        return patientOptional.get();
+        return patientOptional;
     }
 
     public Patient save(Patient patient) {
         return patientRepository.save(patient);
     }
 
-    public Patient update(Long id, Patient patient) {
-        Optional<Patient> patientOptional = patientRepository.findById(id);
-
-        if (!patientOptional.isPresent()) {
-            return null;
-        }
-
-        patient.setId(id);
-        return patientRepository.save(patient);
-    }
-
-    public Boolean deleteById(Long id) {
-        Optional<Patient> patientOptional = patientRepository.findById(id);
-
-        if (!patientOptional.isPresent()) {
-            return false;
-        }
-
+    public void deleteById(Long id) {
         patientRepository.deleteById(id);
-        return true;
     }
 
     public List<Patient> getWaitingList() {
