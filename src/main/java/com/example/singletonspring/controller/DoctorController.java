@@ -90,6 +90,11 @@ public class DoctorController {
         return waitingList.getPatients();
     }
 
+    @PostMapping(value = "/remove-patient-list/{patientId}")
+    public List<Patient> removePatientWaitingList(@PathVariable Long patientId) {
+        return doctorService.removePatientWaitingList(patientId);
+    }
+
     @GetMapping(value = "/get-patient-list")
     public List<Patient> getWaitingList() {
         return doctorService.getWaitingList();

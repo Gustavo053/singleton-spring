@@ -42,6 +42,14 @@ public class DoctorService {
         return waitingList.getPatients();
     }
 
+    public List<Patient> removePatientWaitingList(Long patientId) {
+        WaitingList waitingList = WaitingList.getInstance();
+        List<Patient> patients = waitingList.getPatients();
+
+        patients.removeIf(patient -> patient.getId().equals(patientId));
+        return patients;
+    }
+
     public List<Patient> getWaitingList() {
         WaitingList waitingList = WaitingList.getInstance();
         return waitingList.getPatients();
